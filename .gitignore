@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+build/
+dist/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Data & models (samples/ is tracked; everything else under data/ is not)
+data/*
+!data/samples/
+models/
+*.faiss
+*.sqlite
+*.db
+
+# Packages produced by the pipeline
+packages/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

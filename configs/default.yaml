@@ -1,0 +1,54 @@
+# GraphReady default profile.
+# Every stage backend is swappable here; cloud backends are opt-in and off by default.
+
+profile: general
+
+ingest:
+  type_classifier: heuristic        # heuristic | mobilenet (Phase 2)
+  scanned_pdf_text_coverage_threshold: 0.05
+
+ocr:
+  engine: paddleocr                 # paddleocr | azure (opt-in cloud) | google (opt-in cloud)
+  languages: [en]
+
+layout:
+  backend: docling                  # docling | layoutparser
+
+tables:
+  image_backend: tableformer
+  digital_backend: pdfplumber
+  flatten_multirow_headers: true
+
+normalize:
+  dates: iso8601
+  units: pint
+  tidy_reshape: true
+
+schema:
+  model: gbt-sherlock-v0            # gbt-sherlock-v0 | table-transformer-v1 (Phase 2)
+  type_vocabulary: viznet78
+
+entities:
+  engine: gliner
+  labels: [person, organization, location, date, product, event]
+
+ontology:
+  sources:
+    - name: schema.org
+      path: null                    # resolved by scripts/build_ontology_index.py
+  embedding_model: sentence-transformers/all-MiniLM-L6-v2
+  index: faiss
+  top_k: 5
+  reranker: null                    # cross-encoder/ms-marco-MiniLM-L-6-v2 (Phase 2)
+
+mapping:
+  format: yarrrml
+  include_confidence_comments: true
+
+confidence:
+  calibration: none                 # none | temperature | isotonic (Phase 2)
+  low_confidence_threshold: 0.5
+
+cloud:
+  enabled: false                    # master switch; nothing below runs unless true
+  infographic_vlm: null             # e.g. claude-sonnet-5 for chart->data fallback

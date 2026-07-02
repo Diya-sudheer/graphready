@@ -1,0 +1,40 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "graphready"
+version = "0.1.0"
+description = "Transforming heterogeneous documents into mapping-ready data for Knowledge Graph construction"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Diya Sudheer", email = "diyasudheer8@gmail.com" }]
+keywords = ["document-ai", "knowledge-graph", "rml", "yarrrml", "ocr", "semantic-web", "table-understanding"]
+
+dependencies = [
+    "pydantic>=2.0",
+    "pandas>=2.0",
+    "typer>=0.12",
+    "pyyaml>=6.0",
+    "sqlalchemy>=2.0",
+]
+
+[project.optional-dependencies]
+# Perception layer (heavy; install when implementing stages 02-06)
+perception = ["docling>=2.0", "paddleocr>=2.8", "pdfplumber>=0.11", "openpyxl>=3.1", "pillow>=10.0"]
+# Understanding layer (stages 07-11)
+ml = ["torch>=2.2", "scikit-learn>=1.4", "sentence-transformers>=3.0", "faiss-cpu>=1.8", "gliner>=0.2", "spacy>=3.7", "hdbscan>=0.8", "pint>=0.24", "python-dateutil>=2.9"]
+# Serving & UI
+app = ["fastapi>=0.110", "uvicorn>=0.29", "streamlit>=1.35"]
+dev = ["pytest>=8.0", "ruff>=0.4", "pytest-cov>=5.0"]
+
+[project.scripts]
+graphready = "graphready.cli:app"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
