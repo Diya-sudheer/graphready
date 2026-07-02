@@ -18,10 +18,15 @@ from pathlib import Path
 import gradio as gr
 import pandas as pd
 
-# Allow running from repo root or demo/ without installing
-_repo = Path(__file__).resolve().parent.parent
-if (_repo / "src").exists():
-    sys.path.insert(0, str(_repo / "src"))
+# Allow running without installing, from either layout:
+#   repo:  demo/app.py  with  ../src/graphready
+#   Space: app.py       with   ./src/graphready
+_here = Path(__file__).resolve().parent
+_repo = next(
+    (root for root in (_here, _here.parent) if (root / "src" / "graphready").exists()),
+    _here,
+)
+sys.path.insert(0, str(_repo / "src"))
 
 from graphready.core.orchestrator import Orchestrator  # noqa: E402
 
