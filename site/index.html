@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GraphReady — documents → mapping-ready data for Knowledge Graphs</title>
+<style>
+  :root { --ink:#1a1f2e; --muted:#5b6478; --line:#e3e6ee; --accent:#2f6fed; --ok:#188653; --bg:#fafbfd; --card:#fff; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:system-ui,-apple-system,Segoe UI,sans-serif; color:var(--ink); background:var(--bg); line-height:1.55; }
+  .wrap { max-width:960px; margin:0 auto; padding:0 20px 80px; }
+  header { padding:56px 0 8px; }
+  h1 { font-size:2.1rem; margin:0 0 6px; }
+  .tag { color:var(--muted); font-size:1.08rem; max-width:44rem; }
+  .links a { display:inline-block; margin:14px 12px 0 0; color:var(--accent); text-decoration:none; font-weight:600; }
+  .links a:hover { text-decoration:underline; }
+  h2 { margin:48px 0 4px; font-size:1.35rem; }
+  .sub { color:var(--muted); margin:0 0 18px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:20px 22px; margin:14px 0; }
+  .cols { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+  @media (max-width:760px){ .cols { grid-template-columns:1fr; } }
+  img.page { width:100%; border:1px solid var(--line); border-radius:8px; }
+  pre { background:#f2f4f9; border-radius:8px; padding:12px 14px; overflow-x:auto; font-size:.82rem; margin:8px 0; }
+  code { font-family:ui-monospace,Consolas,monospace; }
+  .trace { border-left:3px solid var(--accent); }
+  .conf { color:var(--ok); font-weight:700; }
+  table { border-collapse:collapse; width:100%; font-size:.88rem; }
+  th,td { border-bottom:1px solid var(--line); padding:7px 10px; text-align:right; }
+  th:first-child, td:first-child, th:nth-child(2), td:nth-child(2) { text-align:left; }
+  thead th { color:var(--muted); font-weight:600; }
+  .win { color:var(--ok); font-weight:700; }
+  .lose { color:#b3261e; }
+  footer { margin-top:64px; color:var(--muted); font-size:.9rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>GraphReady</h1>
+  <p class="tag">Heterogeneous documents → <strong>mapping-ready data</strong> for Knowledge Graph construction.
+  An orchestrator agent routes each document through layout analysis, table extraction, and OCR —
+  with calibrated confidence and a fully auditable decision trace. The human expert stays in charge of the final mapping.</p>
+  <div class="links">
+    <a href="https://github.com/Diya-sudheer/graphready">GitHub repository</a>
+    <a href="https://github.com/Diya-sudheer/graphready/blob/main/docs/ARCHITECTURE.md">Architecture</a>
+    <a href="https://github.com/Diya-sudheer/graphready/blob/main/benchmarks/ocr/RESULTS.md">Benchmarks</a>
+  </div>
+</header>
+
+<h2>Real extraction, shown honestly</h2>
+<p class="sub">Every result below is an actual pipeline output committed to the repo — nothing mocked.</p>
+
+<div class="card">
+  <div class="cols">
+    <div>
+      <strong>Input:</strong> a 9-page digital PDF (course project spec)
+      <img class="page" src="assets/page1.png" alt="First page of the input PDF">
+    </div>
+    <div>
+      <strong>Agent trace</strong> — the orchestrator's actual decisions:
+      <pre class="trace"><code>[route]         → pdf_digital
+  text layer has 1483 chars/page
+[select_engine] → docling
+  cheapest engine supporting pdf_digital
+[accept]        → write_package
+  16,212 chars · confidence <span class="conf">0.938</span></code></pre>
+      <strong>Extracted text</strong> (verbatim excerpt):
+      <pre><code>## Organization
+
+- In order to pass you need to achieve 19
+  out of 25 points on the autograder ...
+- Submit your solution no later than
+  July 15th, 16:00.</code></pre>
+      <p>Because the text layer was detected, <strong>OCR was skipped entirely</strong> — a routing decision, not a constant. The same page rendered as an image goes down the OCR path instead and still reaches confidence <span class="conf">0.933</span>.</p>
+    </div>
+  </div>
+</div>
+
+<h2>Measured model choices, not vibes</h2>
+<p class="sub">Which OCR engine should the pipeline trust? We benchmarked candidates on the same pages across
+four degradation levels, with the PDF text layer as ground truth. Word-level F1 (order-insensitive) and speed:</p>
+
+<div class="card">
+<table>
+  <thead><tr><th>condition</th><th>engine</th><th>precision</th><th>recall</th><th>F1</th><th>CER</th><th>s/page</th></tr></thead>
+  <tbody>
+    <tr><td>clean 300 dpi</td><td>RapidOCR</td><td>0.984</td><td>0.980</td><td class="win">0.982</td><td>0.003</td><td class="win">1.6</td></tr>
+    <tr><td></td><td>EasyOCR</td><td>0.981</td><td>0.976</td><td>0.978</td><td>0.040</td><td>10.8</td></tr>
+    <tr><td>fax 150 dpi</td><td>RapidOCR</td><td>0.974</td><td>0.956</td><td class="win">0.965</td><td>0.005</td><td class="win">1.2</td></tr>
+    <tr><td></td><td>EasyOCR</td><td>0.967</td><td>0.944</td><td>0.955</td><td>0.067</td><td>5.1</td></tr>
+    <tr><td>poor 100 dpi + blur</td><td>RapidOCR</td><td>0.973</td><td>0.969</td><td class="win">0.971</td><td>0.017</td><td class="win">0.9</td></tr>
+    <tr><td></td><td>EasyOCR</td><td>0.785</td><td>0.733</td><td class="lose">0.758</td><td>0.106</td><td>3.6</td></tr>
+    <tr><td>awful 100 dpi + jpeg q20</td><td>RapidOCR</td><td>0.966</td><td>0.929</td><td class="win">0.947</td><td>0.039</td><td class="win">0.8</td></tr>
+    <tr><td></td><td>EasyOCR</td><td>0.457</td><td>0.423</td><td class="lose">0.439</td><td>0.229</td><td>3.8</td></tr>
+  </tbody>
+</table>
+<p><strong>Finding:</strong> the engines are nearly tied on clean input, but under degradation EasyOCR collapses
+(F1 0.44) while RapidOCR holds (0.95) at 4–7× the speed — so RapidOCR is the pipeline default, and the
+low-confidence escalation path is reserved for genuinely awful scans.
+<a href="https://github.com/Diya-sudheer/graphready/blob/main/benchmarks/ocr/RESULTS.md">Full results & caveats</a> ·
+<a href="https://github.com/Diya-sudheer/graphready/blob/main/benchmarks/ocr/benchmark_ocr.py">reproduce it yourself</a>.</p>
+</div>
+
+<h2>What the pipeline produces</h2>
+<div class="card">
+<pre><code>package/
+├── tables/table_00.csv    # extracted, normalized tables
+├── text.md                # full text in reading order
+├── document.json          # quality report + agent decision trace
+└── raw_export.json        # backend-native export (full provenance)</code></pre>
+<p>Next layers (in progress): semantic column typing, entity candidates, ontology concept
+suggestions via embedding search, and auto-drafted YARRRML mapping templates — see the
+<a href="https://github.com/Diya-sudheer/graphready/blob/main/docs/ROADMAP.md">roadmap</a>.</p>
+</div>
+
+<footer>
+  GraphReady · MIT · built and benchmarked by
+  <a href="https://github.com/Diya-sudheer">Diya Panikkassery Sudheer Kumar</a>
+</footer>
+
+</div>
+</body>
+</html>
