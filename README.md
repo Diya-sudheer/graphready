@@ -8,6 +8,8 @@ GraphReady is a document intelligence pipeline that ingests messy real-world doc
 
 ---
 
+**🔗 [Live showcase with real outputs & benchmarks](https://diya-sudheer.github.io/graphready/)** · [OCR engine benchmark results](benchmarks/ocr/RESULTS.md)
+
 ## Why this problem?
 
 Knowledge Graph construction pipelines assume clean, structured input (CSV, JSON, relational tables). Real organizations have scanned reports, infographic-heavy PDFs, Excel files with merged headers, and photographed tables. The gap between *"pile of documents"* and *"data an RML mapping can consume"* is where most KG projects actually die.
@@ -89,7 +91,9 @@ graphready export --package ./packages/report/ --format yarrrml
 
 ## Project status & roadmap
 
-**Working now:** `graphready process <file>` runs end to end — type detection, agentic engine routing, Docling perception (layout + TableFormer + OCR) for PDF/scan/image/xlsx, exact pandas path for CSV, Mapping-Ready Package output with quality report and full agent trace. Understanding-layer stages (semantic typing, entities, ontology suggestion, YARRRML) are next. See [docs/ROADMAP.md](docs/ROADMAP.md) for the milestone plan (MVP → advanced features → research contributions) and [docs/EVALUATION.md](docs/EVALUATION.md) for metrics and benchmark datasets.
+**Working now:** `graphready process <file>` runs end to end — type detection, agentic engine routing, Docling perception (layout + TableFormer + OCR) for PDF/scan/image/xlsx, exact pandas path for CSV, Mapping-Ready Package output with quality report and full agent trace. Understanding-layer stages (semantic typing, entities, ontology suggestion, YARRRML) are next.
+
+**Measured, not claimed:** OCR engine selection is backed by a [reproducible benchmark](benchmarks/ocr/RESULTS.md) — RapidOCR beats EasyOCR on word-F1 in all four degradation conditions at 4–7× the speed, and the gap explodes on degraded scans (F1 0.947 vs 0.439). A Gradio demo of the full pipeline lives in [demo/](demo/) (Hugging Face Spaces-ready). See [docs/ROADMAP.md](docs/ROADMAP.md) for the milestone plan (MVP → advanced features → research contributions) and [docs/EVALUATION.md](docs/EVALUATION.md) for metrics and benchmark datasets.
 
 ## Research
 
