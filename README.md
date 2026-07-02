@@ -8,7 +8,7 @@ GraphReady is a document intelligence pipeline that ingests messy real-world doc
 
 ---
 
-**🔗 [Live showcase with real outputs & benchmarks](https://diya-sudheer.github.io/graphready/)** · [OCR engine benchmark results](benchmarks/ocr/RESULTS.md)
+**🚀 [Try it live on Hugging Face Spaces](https://huggingface.co/spaces/Diya1704/graphready)** · **[Showcase with real outputs & benchmarks](https://diya-sudheer.github.io/graphready/)** · [OCR benchmark results](benchmarks/ocr/RESULTS.md)
 
 ## Why this problem?
 

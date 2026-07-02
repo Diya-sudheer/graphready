@@ -31,8 +31,11 @@ def main(user: str, token: str, space_name: str = "graphready") -> None:
     with tempfile.TemporaryDirectory() as td:
         stage = Path(td)
         for f in (REPO / "demo").iterdir():
-            shutil.copy2(f, stage / f.name)
-        shutil.copytree(REPO / "src", stage / "src")
+            if f.is_file():
+                shutil.copy2(f, stage / f.name)
+        shutil.copytree(
+            REPO / "src", stage / "src", ignore=shutil.ignore_patterns("__pycache__")
+        )
         samples = REPO / "data" / "samples"
         if samples.exists():
             shutil.copytree(samples, stage / "data" / "samples")
