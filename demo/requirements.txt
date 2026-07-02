@@ -1,9 +1,10 @@
-gradio>=5.0
-docling>=2.100
-onnxruntime>=1.20
-pandas>=2.0
-pydantic>=2.0
-pillow>=10.0
+# Pinned to the versions the pipeline is tested with locally (see pyproject).
+# gradio itself is installed by the Space runtime (sdk: gradio) — do not list it.
+docling==2.108.0
+onnxruntime>=1.26,<2
+pandas>=2.2,<3
+pydantic>=2.9,<3
+pillow>=10.4
 typer>=0.12
-pyyaml>=6.0
-sqlalchemy>=2.0
+pyyaml>=6.0.1
+sqlalchemy>=2.0.30,<3
