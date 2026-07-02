@@ -8,7 +8,9 @@ ingest:
   scanned_pdf_text_coverage_threshold: 0.05
 
 ocr:
-  engine: paddleocr                 # paddleocr | azure (opt-in cloud) | google (opt-in cloud)
+  engine: docling                   # docling | paddleocr | azure/google (opt-in cloud)
+  escalation_engine: chandra        # invoked by the orchestrator on low confidence; requires GPU install
+  escalation_threshold: 0.6
   languages: [en]
 
 layout:

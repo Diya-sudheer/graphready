@@ -60,7 +60,8 @@ See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the full design.
 |---|---|---|
 | Layout detection | Vision transformer / CNN detector (DocLayNet-trained, via Docling) | local |
 | Table structure recognition | TableFormer (im2seq transformer) | local |
-| OCR | PaddleOCR (CNN+CTC / SVTR) | local |
+| OCR | Docling OCR path (default) · Chandra VLM-OCR as GPU escalation backend | local |
+| Agentic orchestration | Confidence-driven controller: routes documents, escalates weak extractions to stronger engines, flags for human review — every decision audited in an AgentTrace | local |
 | Document type classifier | Fine-tuned MobileNet/ViT-tiny + heuristics | local |
 | Column semantic typing | **Own trainable classifier** — feature-based + embedding-based, trained on VizNet/GitTables/SemTab | local |
 | Entity candidates | GLiNER (zero-shot span-based NER) | local |
@@ -88,7 +89,7 @@ graphready export --package ./packages/report/ --format yarrrml
 
 ## Project status & roadmap
 
-Currently in design phase. See [docs/ROADMAP.md](docs/ROADMAP.md) for the milestone plan (MVP → advanced features → research contributions) and [docs/EVALUATION.md](docs/EVALUATION.md) for metrics and benchmark datasets.
+**Working now:** `graphready process <file>` runs end to end — type detection, agentic engine routing, Docling perception (layout + TableFormer + OCR) for PDF/scan/image/xlsx, exact pandas path for CSV, Mapping-Ready Package output with quality report and full agent trace. Understanding-layer stages (semantic typing, entities, ontology suggestion, YARRRML) are next. See [docs/ROADMAP.md](docs/ROADMAP.md) for the milestone plan (MVP → advanced features → research contributions) and [docs/EVALUATION.md](docs/EVALUATION.md) for metrics and benchmark datasets.
 
 ## Research
 

@@ -21,8 +21,11 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-# Perception layer (heavy; install when implementing stages 02-06)
-perception = ["docling>=2.0", "paddleocr>=2.8", "pdfplumber>=0.11", "openpyxl>=3.1", "pillow>=10.0"]
+# Perception layer (heavy: torch + model weights). onnxruntime is required for
+# the RapidOCR scan path (docling's rapidocr torch backend is broken as of 2.108).
+perception = ["docling>=2.100", "onnxruntime>=1.20", "pillow>=10.0"]
+# Escalation OCR backend (GPU, ~8GB VRAM): pip install graphready[chandra]
+chandra = ["chandra-ocr>=0.1"]
 # Understanding layer (stages 07-11)
 ml = ["torch>=2.2", "scikit-learn>=1.4", "sentence-transformers>=3.0", "faiss-cpu>=1.8", "gliner>=0.2", "spacy>=3.7", "hdbscan>=0.8", "pint>=0.24", "python-dateutil>=2.9"]
 # Serving & UI

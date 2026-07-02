@@ -53,7 +53,17 @@
 └────────────────────────────────────────────────────────────────────────┘
 ```
 
-Orchestration: a simple **stage runner** (DAG of stages with typed artifacts) — no heavyweight workflow engine in MVP; the DAG abstraction lets you swap in Prefect/Dagster later without touching stage code.
+### Agentic orchestration
+
+The pipeline is driven by an **orchestrator agent** (`core/orchestrator.py`) rather than a fixed linear runner. Agency means *decisions about tools*, never LLM freeform extraction:
+
+1. **route** — detect the document type (Stage 01)
+2. **select** — pick the cheapest engine that handles it (CSV → pandas; PDF/scan/image/xlsx → Docling)
+3. **inspect** — read the engine's confidence report
+4. **escalate** — on low OCR confidence for scans/images, retry with a stronger backend (Chandra VLM-OCR, opt-in GPU); if none is installed, flag the package for priority human review
+5. **accept** — write the Mapping-Ready Package
+
+Every decision is recorded in an **AgentTrace** shipped inside the package (`document.json`), so agentic behavior stays fully auditable. The policy is deterministic rules today; the interface allows a learned or LLM policy later (the "multi-agent document processing" evolution path) without touching any stage code. Understanding-layer stages (07–11) attach to the same controller as they land.
 
 ## 3. Core data model
 
@@ -86,9 +96,10 @@ Everything hangs off this model; stages only read/write these types. Provenance 
 - **Why not an LLM:** this is a cheap, fast, offline classification problem — a 10 MB model at >95% accuracy beats a VLM call.
 
 ### Stage 02 — OCR
-- **Local default:** PaddleOCR (detection + SVTR recognition), language-configurable.
-- **Interface:** `OcrEngine.recognize(image) -> list[TextSpan(text, bbox, conf)]` — cloud backends (Azure Document Intelligence, Google Document AI) implement the same interface, enabled per-config.
-- Token-level confidences are retained; they propagate into the quality report.
+- **Local default:** Docling's integrated OCR path for scans; PaddleOCR as alternative backend.
+- **Escalation backend:** **Chandra** (Datalab, 2025) — a VLM-based OCR model, markedly stronger on handwriting, degraded scans, and complex tables; needs a GPU (~8 GB VRAM), so the orchestrator invokes it only when the default engine reports low confidence.
+- **Interface:** `PerceptionEngine.parse(path) -> PerceptionResult(text, tables, quality)` — cloud backends (Azure Document Intelligence, Google Document AI) implement the same interface, enabled per-config.
+- Confidence scores are retained and propagate into the quality report; they are what the orchestrator's escalation policy reads.
 
 ### Stage 03 — Layout analysis
 - **Docling** as the backbone: its layout model is trained on DocLayNet (11 region classes, 80k pages) and ships with table/figure/caption detection and reading order.
