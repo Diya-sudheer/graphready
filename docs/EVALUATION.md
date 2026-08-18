@@ -1,5 +1,16 @@
 # GraphReady — Evaluation Plan
 
+> ⚠️ **This document is a plan, not results. It contains no executed measurements.**
+> The only evaluation actually run to date is the OCR engine benchmark in
+> [`benchmarks/ocr/RESULTS.md`](../benchmarks/ocr/RESULTS.md) (stage 02, partial).
+> Everything below describes harnesses and datasets that have **not** yet been built or run.
+>
+> A constraint recorded in the [README](../README.md#findings): for the understanding-layer
+> stages (08–11) there is **no ground truth for this task**. SemTab provides gold data for
+> parts of table→KG matching but assumes already-clean tables — the assumption this project
+> set out to remove. Any end-to-end number produced before that gap is addressed would be
+> unfalsifiable.
+
 Every stage gets its own harness under `benchmarks/`; the pipeline gets end-to-end metrics. Numbers go in the README — measured, versioned, reproducible (`graphready evaluate --stage <name>`).
 
 ## Per-stage metrics & datasets
