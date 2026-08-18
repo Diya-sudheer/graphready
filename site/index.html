@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>GraphReady — documents → mapping-ready data for Knowledge Graphs</title>
+<title>GraphReady — OCR degradation benchmark & analysis of document → knowledge-graph evaluation</title>
 <style>
   :root { --ink:#1a1f2e; --muted:#5b6478; --line:#e3e6ee; --accent:#2f6fed; --ok:#188653; --bg:#fafbfd; --card:#fff; }
   * { box-sizing:border-box; }
@@ -38,9 +38,11 @@
 
 <header>
   <h1>GraphReady</h1>
-  <p class="tag">Heterogeneous documents → <strong>mapping-ready data</strong> for Knowledge Graph construction.
-  An orchestrator agent routes each document through layout analysis, table extraction, and OCR —
-  with calibrated confidence and a fully auditable decision trace. The human expert stays in charge of the final mapping.</p>
+  <p class="tag">An <strong>OCR engine benchmark under scan degradation</strong>, and an analysis of why the
+  document → knowledge-graph task can't currently be evaluated end to end. Includes a working perception-layer
+  prototype: an orchestrator agent routes each document through layout analysis, table extraction, and OCR,
+  with a fully auditable decision trace. The semantic layer was deliberately not built —
+  <a href="https://github.com/Diya-sudheer/graphready#2-analysis-why-the-semantic-half-cant-be-evaluated">there is no ground truth to validate it against</a>.</p>
   <div class="links">
     <a href="https://huggingface.co/spaces/Diya1704/graphready">🚀 Try it live (upload your own PDF)</a>
     <a href="https://github.com/Diya-sudheer/graphready">GitHub repository</a>
